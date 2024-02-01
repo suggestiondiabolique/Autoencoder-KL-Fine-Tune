@@ -57,6 +57,7 @@ def collate(batch):
         image = Image.open(sample['image'])
         image = ToTensor()(image)
         image = flip_transform(image)
+        #Any additional lazy transformations do here
         images.append(image)
         labels.append(label)
 
@@ -142,6 +143,7 @@ def main():
     parser.add_argument('--train_csv', type=str, default='/content/dataset_train.csv', help='Path to the train CSV file')
     parser.add_argument('--test_csv', type=str, default='/content/dataset_test.csv', help='Path to the test CSV file')
     parser.add_argument('--batch_size', type=int, default=32, help='Batch size for training')
+    parser.add_argument('--loss_fn', type=str, default='MSE', help='MSE'/ 'KL Loss Reconstruction Loss')
     parser.add_argument('--epochs', type=int, default=10, help='Number of epochs for training')
     parser.add_argument('--save_path', type=str, default='/content', help='Path to save the model')
     parser.add_argument('--lr', type=float, default=0.001, help='Learning rate for training')
