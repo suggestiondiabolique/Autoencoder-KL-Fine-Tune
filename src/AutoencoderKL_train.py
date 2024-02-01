@@ -6,8 +6,6 @@ from torchvision.transforms import ToPILImage
 import numpy as np
 from PIL import Image
 from torchvision.transforms import ToTensor, Compose, RandomHorizontalFlip, RandomVerticalFlip, RandomRotation, RandomChoice
-from torchvision.transforms.functional import rgb_to_grayscale,rotate
-from torchvision.transforms import Normalize
 from torchvision.utils import make_grid
 from torch.optim import Adam
 from tqdm import trange
@@ -15,7 +13,6 @@ from torch.nn.functional import mse_loss
 import torch
 import argparse
 import logging
-import os
 from torch.utils.data import DataLoader
 from diffusers import AutoencoderKL
 
@@ -152,6 +149,7 @@ def main():
     # Parse arguments
     args = parser.parse_args()
 
+    vae_model = AutoencoderKL.from_pretrained("CompVis/stable-diffusion-v1-4", subfolder="vae").to('cuda')
 
     #move to GPU
     vae_model = vae_model.to('cuda')
