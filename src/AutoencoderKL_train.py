@@ -2,7 +2,6 @@ from functools import partial
 from torch.utils.data import Dataset
 from torchvision import datasets
 from torchvision.transforms import ToTensor
-from datasets import load_dataset
 from torchvision.transforms import ToPILImage
 import numpy as np
 from PIL import Image
@@ -18,15 +17,10 @@ import argparse
 import logging
 import os
 from torch.utils.data import DataLoader
-from ..data.data_utils import get_possible_colours_rgb_tuples_land_cover,one_hot_encode,drop_channels, flip_transform
 from diffusers import AutoencoderKL
-import matplotlib.pyplot as plt
 
-
-
-
-
-
+flip_transform = RandomChoice([RandomHorizontalFlip(p=0.5), RandomVerticalFlip(p=0.5)])
+#To do: Full diahedral group
 
 
 def make_dataset(csv_dict):
@@ -43,19 +37,17 @@ def make_dataset(csv_dict):
 def collate(batch):
     
     """
-    Applies random horizontal and vertical flips to a batch of land cover images.
-
-    This function takes a list of dictionaries, each containing a path to a land cover image, and returns a dictionary with a tensor of transformed images. It uses the Compose, RandomHorizontalFlip, and RandomVerticalFlip functions from torchvision.transforms to create a transformation pipeline. It also uses the Image and ToTensor functions from PIL and torchvision to load and convert the images to tensors.
+    Applies random horizontal and vertical flips to a batch images.
 
     Parameters
     ----------
     batch : list
-        A list of dictionaries, each containing a key 'land_cover_image' and a value of a path to an image file.
+        A list of dictionaries, each containing a key 'image' and a value of a path to an image file.
 
     Returns
     -------
     dict
-        A dictionary with a key 'land_cover_images' and a value of a tensor of shape (batch_size, channels, height, width) containing the transformed images.
+        A dictionary with a key 'images' and a value of a tensor of shape (batch_size, channels, height, width) containing the transformed images.
     """
   
     images = []
@@ -157,20 +149,6 @@ def main():
     parser.add_argument('--from_pretrained', type=str, default=None, help='HF directory name to pretrained VAE' )
     # Parse arguments
     args = parser.parse_args()
-
-    # subfolder = None
-    # pretrained_path = args.from_pretrained
-    # #load auto-encoder tiny from HF Hub
-    # if args.from_pretrained == None:
-    #     pretrained_path = "CompVis/stable-diffusion-v1-4"
-    #     subfolder = "vae"
-
-
-    # if subfolder is not None:
-    #     vae_model = AutoencoderKL.from_pretrained(pretrained_path, subfolder).to('cuda')
-    
-    # if args.from_pretrained is not None:
-    #     vae_model = AutoencoderKL.from_pretrained(args.p)
 
 
     #move to GPU
